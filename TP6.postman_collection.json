@@ -1,0 +1,43 @@
+{
+	"info": {
+		"_postman_id": "59f617ba-bbf4-4624-b464-2a6fda98cecd",
+		"name": "TP6",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "digitize",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/digitize?gender=M&age=12&name=John%20DOE",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"digitize"
+					],
+					"query": [
+						{
+							"key": "gender",
+							"value": "M"
+						},
+						{
+							"key": "age",
+							"value": "12"
+						},
+						{
+							"key": "name",
+							"value": "John%20DOE"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
