@@ -28,7 +28,7 @@ class WeiClinic {
     }
 
     removeStackFromEnvelope(idStack, idEnvelope) {
-
+        
     }
 
     killEnvelope(idEnvelope) {
