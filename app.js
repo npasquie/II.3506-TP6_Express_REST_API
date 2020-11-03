@@ -17,7 +17,7 @@ app.get('/digitize', (req, res) => {
     // Retrieve gender, age and name
     const {gender, age, name} = req.query
 
-    const createdElements = getClinic().create(gender, name, age)
+    const createdElements = getClinic().create(gender, name, parseInt(age))
 
     res.status(200).set({ 'Content-Type': 'application/json' }).json(createdElements)
 })
