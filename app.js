@@ -15,6 +15,7 @@ app.use(function (_req, res, next) {
 
 app.get('/digitize', (req, res) => {
     // Retrieve gender, age and name
+    const {gender, age, name} = req.query
 
     const createdElements = getClinic().create(gender, name, age)
 
