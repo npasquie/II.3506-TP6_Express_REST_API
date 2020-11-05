@@ -15,7 +15,7 @@ describe('Remove action', () => {
     it('When the envelope cannot be found', (done) => {
 
         clinicDependency.getClinic().create('male', 75, 'Bob')
-        clinicDependency.getClinic().envelopes[0].idStack = null
+        clinicDependency.getClinic().stacks[0].idEnvelope = null
 
         request(app)
             .post('/remove/1')
@@ -25,8 +25,7 @@ describe('Remove action', () => {
     it('When we can remove', (done) => {
         
         clinicDependency.getClinic().create('male', 75, 'Bob')
-      
-        
+    
         request(app)
             .post('/remove/2')
             .expect(204)

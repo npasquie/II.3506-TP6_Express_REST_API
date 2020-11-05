@@ -24,19 +24,9 @@ app.get('/digitize', (req, res) => {
 
 
 app.post('/remove/:stackId', (request, response) => {
-    
-    let findStack = false
-    for (let i = 0; i < getClinic().stacks.length; i++) {
-        if (getClinic().stacks[i].id == request.params.stackId) {
-            for (let j = 0; j < getClinic().envelopes.length; j++) {
-                if (getClinic().envelopes[j].idStack === getClinic().stacks[i].id) {
-                    getClinic().envelopes[j].idStack = null
-                    getClinic().stacks[i].idEnvelope = null
-		            findStack = true
-                } 
-            }            
-        }
-    }
+    getClinic().create('male', 75, 'Bob')
+    let findStack = getClinic().removeStackFromEnvelope(request.params.stackId)
+
     if (findStack === false) {
         response.status(400)
     }
@@ -44,6 +34,26 @@ app.post('/remove/:stackId', (request, response) => {
         response.status(204)
     }
     response.end()
+})
+
+app.post('/kill/:envelopeId', (request, response) => {
+    getClinic().create('male', 75, 'Bob')
+    let findEnvelope = false
+    for (let i = 0; i < getClinic().envelopes.length; i++) {
+        if (getClinic().envelopes[i].id == request.params.envelopeId) {
+            getClinic().removeStackFromEnvelope(getClinic().envelopes[i].idStack)
+            getClinic().killEnvelope(request.params.envelopeId)
+            findEnvelope = true
+        }
+    }
+
+    if (findEnvelope === false) {
+        response.status(400)
+    }
+    else {
+        response.status(204)
+    }
+    response.end()    
 })
 
 export default app
