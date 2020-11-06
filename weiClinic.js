@@ -1,4 +1,4 @@
-import { getNewId } from './idHelper'
+import {getNewId} from './idHelper'
 import CorticalStack from './corticalStack'
 import Envelope from './Envelope'
 
@@ -24,21 +24,32 @@ class WeiClinic {
     }
 
     assignStackToEnvelope(idStack, idEnvelope) {
-        let done = false
+        let returnStatus = 0
         for (let i = 0; i < this.stacks.length; i++) {
             let stack = this.stacks[i]
             if (stack.id === idStack) {
-                for (let j = 0; j < this.envelopes.length; j++) {
-                    let envelope = this.envelopes[j]
-                    if (envelope.id === idEnvelope) {
-                        stack.idEnvelope = idEnvelope
-                        envelope.idStack = idStack
-                        done = true
+                if (idEnvelope === null) {
+                    for (let j = 0; j < this.envelopes.length; i++) {
+                        let envelope = this.envelopes[i]
+                        if (envelope.idStack === null) {
+                            idEnvelope = envelope.id
+                        }
+                    }
+                    returnStatus = 1
+                }
+                if (idEnvelope !== null) {
+                    for (let j = 0; j < this.envelopes.length; j++) {
+                        let envelope = this.envelopes[j]
+                        if (envelope.id === idEnvelope) {
+                            stack.idEnvelope = idEnvelope
+                            envelope.idStack = idStack
+                            returnStatus = 2
+                        }
                     }
                 }
             }
         }
-        return done
+        return returnStatus
     }
 
     removeStackFromEnvelope(idStack) {

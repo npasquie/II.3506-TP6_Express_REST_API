@@ -14,30 +14,43 @@ app.use(function (_req, res, next) {
 })
 
 app.get('/digitize', (req, res) => {
-    // Retrieve gender, age and name
     const {gender, age, name} = req.query
-
     const createdElements = getClinic().create(gender, name, parseInt(age))
 
-    res.status(200).set({ 'Content-Type': 'application/json' }).json(createdElements)
+    res.status(200).set({'Content-Type': 'application/json'}).json(createdElements)
 })
 
-
 app.post('/remove/:stackId', (req, res) => {
-
     let findStack = getClinic().removeStackFromEnvelope(req.params.stackId)
 
     if (findStack === false) {
         res.status(400)
-    }
-    else {
+    } else {
         res.status(204)
     }
     res.end()
 })
 
+app.put('/implant/:stackId/:envelopeId', (req, res) => {
+    const stackId = req.params.stackId
+    const envelopeId = req.params.envelopeId
+    let returnStatus = getClinic().assignStackToEnvelope(stackId, envelopeId)
+
+    switch (returnStatus) {
+        case 0:
+            res.status(400)
+            break
+        case 1:
+            res.status(404)
+            break
+        case 2:
+            res.status(204)
+            break
+    }
+    res.end()
+})
+
 app.post('/kill/:envelopeId', (req, res) => {
-    
     let findEnvelope = false
     for (let i = 0; i < getClinic().envelopes.length; i++) {
         if (getClinic().envelopes[i].id === parseInt(req.params.envelopeId)) {
@@ -49,8 +62,19 @@ app.post('/kill/:envelopeId', (req, res) => {
 
     if (findEnvelope === false) {
         res.status(400)
+    } else {
+        res.status(204)
     }
-    else {
+    res.end()
+})
+
+app.delete('/truedeath/:stackId', (req, res) => {
+    const stackId = req.params.stackId
+    let done = getClinic().destroyStack(stackId)
+
+    if (done === false) {
+        res.status(400)
+    } else {
         res.status(204)
     }
     res.end()
