@@ -23,37 +23,37 @@ app.get('/digitize', (req, res) => {
 })
 
 
-app.post('/remove/:stackId', (request, response) => {
+app.post('/remove/:stackId', (req, res) => {
 
-    let findStack = getClinic().removeStackFromEnvelope(request.params.stackId)
+    let findStack = getClinic().removeStackFromEnvelope(req.params.stackId)
 
     if (findStack === false) {
-        response.status(400)
+        res.status(400)
     }
     else {
-        response.status(204)
+        res.status(204)
     }
-    response.end()
+    res.end()
 })
 
-app.post('/kill/:envelopeId', (request, response) => {
+app.post('/kill/:envelopeId', (req, res) => {
     
     let findEnvelope = false
     for (let i = 0; i < getClinic().envelopes.length; i++) {
-        if (getClinic().envelopes[i].id == request.params.envelopeId) {
+        if (getClinic().envelopes[i].id === parseInt(req.params.envelopeId)) {
             getClinic().removeStackFromEnvelope(getClinic().envelopes[i].idStack)
-            getClinic().killEnvelope(request.params.envelopeId)
+            getClinic().killEnvelope(req.params.envelopeId)
             findEnvelope = true
         }
     }
 
     if (findEnvelope === false) {
-        response.status(400)
+        res.status(400)
     }
     else {
-        response.status(204)
+        res.status(204)
     }
-    response.end()    
+    res.end()
 })
 
 export default app

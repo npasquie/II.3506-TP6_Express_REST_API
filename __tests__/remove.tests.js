@@ -3,18 +3,16 @@ import app from '../app'
 
 import * as clinicDependency from '../weiClinic'
 
-
-
 describe('Remove action', () => {
     it('When the stack cannot be found', (done) => {
         request(app)
-            .post('/remove/42')
+            .post('/remove/1')
             .expect(400)
             .end(done)
     })
-    it('When the envelope cannot be found', (done) => {
 
-        clinicDependency.getClinic().create('male', 75, 'Bob')
+    it('When the envelope cannot be found', (done) => {
+        clinicDependency.getClinic().create('M', 'Bob', 75)
         clinicDependency.getClinic().stacks[0].idEnvelope = null
 
         request(app)
@@ -22,8 +20,8 @@ describe('Remove action', () => {
             .expect(400)
             .end(done)
     })
-    it('When we can remove', (done) => {
 
+    it('When we can remove', (done) => {
         clinicDependency.getClinic = jest.fn().mockReturnValue({
             removeStackFromEnvelope: jest.fn(),
             create: jest.fn()
@@ -37,7 +35,7 @@ describe('Remove action', () => {
             create
         })
         
-        clinicDependency.getClinic().create('male', 75, 'Bob')
+        clinicDependency.getClinic().create('M', 'Bob', 75)
     
         request(app)
             .post('/remove/2')
@@ -48,5 +46,4 @@ describe('Remove action', () => {
             })
             .end(done)
     })
-
 })

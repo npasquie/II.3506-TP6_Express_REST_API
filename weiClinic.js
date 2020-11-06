@@ -28,20 +28,19 @@ class WeiClinic {
     }
 
     removeStackFromEnvelope(idStack) {
-        let findStack = false
+        let done = false
         for (let i = 0; i < this.stacks.length; i++) {
             if (this.stacks[i].id === idStack) {
                 for (let j = 0; j < this.envelopes.length; j++) {
                     if (this.envelopes[j].id === this.stacks[i].idEnvelope) {
                         this.stacks[i].idEnvelope = null
                         this.envelopes[j].idStack = null
-                        findStack = true
+                        done = true
                     }
                 }
-                
             }
         }
-        return findStack
+        return done
     }
 
     killEnvelope(idEnvelope) {
