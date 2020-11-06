@@ -24,7 +24,7 @@ app.get('/digitize', (req, res) => {
 
 
 app.post('/remove/:stackId', (request, response) => {
-    getClinic().create('male', 75, 'Bob')
+
     let findStack = getClinic().removeStackFromEnvelope(request.params.stackId)
 
     if (findStack === false) {
@@ -37,7 +37,7 @@ app.post('/remove/:stackId', (request, response) => {
 })
 
 app.post('/kill/:envelopeId', (request, response) => {
-    getClinic().create('male', 75, 'Bob')
+    
     let findEnvelope = false
     for (let i = 0; i < getClinic().envelopes.length; i++) {
         if (getClinic().envelopes[i].id == request.params.envelopeId) {
