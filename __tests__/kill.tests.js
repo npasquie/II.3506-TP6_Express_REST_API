@@ -6,7 +6,7 @@ import * as clinicDependency from '../weiClinic'
 
 
 describe('Kill action', () => {
-    it('When the envelop cannot be found', (done) => {
+    it('When the envelope cannot be found', (done) => {
         request(app)
             .post('/kill/42')
             .expect(400)

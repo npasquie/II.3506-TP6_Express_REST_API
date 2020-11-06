@@ -30,7 +30,7 @@ class WeiClinic {
     removeStackFromEnvelope(idStack) {
         let findStack = false
         for (let i = 0; i < this.stacks.length; i++) {
-            if (this.stacks[i].id == idStack) {
+            if (this.stacks[i].id === idStack) {
                 for (let j = 0; j < this.envelopes.length; j++) {
                     if (this.envelopes[j].id === this.stacks[i].idEnvelope) {
                         this.stacks[i].idEnvelope = null
@@ -46,7 +46,7 @@ class WeiClinic {
 
     killEnvelope(idEnvelope) {
         for (let i = 0; i < this.envelopes.length; i++) {
-            if (this.envelopes[i].id == idEnvelope) {
+            if (this.envelopes[i].id === idEnvelope) {
                 this.envelopes.splice(i, 1)
             }
         }
@@ -59,4 +59,4 @@ class WeiClinic {
 
 const weiClinic = new WeiClinic()
 
-export const getClinic = () => weiClinic
+export let getClinic = () => weiClinic
