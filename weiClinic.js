@@ -24,7 +24,21 @@ class WeiClinic {
     }
 
     assignStackToEnvelope(idStack, idEnvelope) {
-
+        let done = false
+        for (let i = 0; i < this.stacks.length; i++) {
+            let stack = this.stacks[i]
+            if (stack.id === idStack) {
+                for (let j = 0; j < this.envelopes.length; j++) {
+                    let envelope = this.envelopes[j]
+                    if (envelope.id === idEnvelope) {
+                        stack.idEnvelope = idEnvelope
+                        envelope.idStack = idStack
+                        done = true
+                    }
+                }
+            }
+        }
+        return done
     }
 
     removeStackFromEnvelope(idStack) {
@@ -44,15 +58,33 @@ class WeiClinic {
     }
 
     killEnvelope(idEnvelope) {
+        let done = false
         for (let i = 0; i < this.envelopes.length; i++) {
-            if (this.envelopes[i].id === idEnvelope) {
+            let envelope = this.envelopes[i]
+            if (envelope === idEnvelope) {
+                if (envelope.idStack !== null) {
+                    this.removeStackFromEnvelope(envelope.idStack)
+                }
                 this.envelopes.splice(i, 1)
+                done = true
             }
         }
+        return done
     }
 
     destroyStack(idStack) {
-
+        let done = false;
+        for (let i = 0; i < this.stacks.length; i++) {
+            let stack = this.stacks[i]
+            if (stack.id === idStack) {
+                if (stack.idEnvelope !== null) {
+                    this.killEnvelope(stack.idEnvelope)
+                }
+                this.stacks.splice(i, 1)
+                done = true
+            }
+        }
+        return done
     }
 }
 
