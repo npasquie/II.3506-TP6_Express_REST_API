@@ -13,10 +13,25 @@ describe('Kill action', () => {
     
     it('When we can kill', (done) => {
         clinicDependency.getClinic().create('M', 'Bob', 75)
-    
+
+        clinicDependency.getClinic = jest.fn().mockReturnValue({
+            killEnvelope: jest.fn(),
+        })
+
+        const killEnvelope = jest.fn().mockReturnValue(true)
+
+        clinicDependency.getClinic.mockReturnValue({
+            killEnvelope,
+        })
+
         request(app)
             .post('/kill/1')
             .expect(204)
+            .expect(response => {
+                expect(response.body).toEqual({})
+                expect(killEnvelope).toHaveBeenCalledTimes(1)
+                expect(killEnvelope).toHaveBeenCalledWith("1")
+            })
             .end(done)
     })
 })

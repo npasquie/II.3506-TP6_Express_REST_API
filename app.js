@@ -16,18 +16,12 @@ app.use(function (_req, res, next) {
 app.get('/digitize', (req, res) => {
     const {gender, age, name} = req.query
     const createdElements = getClinic().create(gender, name, parseInt(age))
-
     res.status(200).set({'Content-Type': 'application/json'}).json(createdElements)
 })
 
 app.post('/remove/:stackId', (req, res) => {
-    let findStack = getClinic().removeStackFromEnvelope(req.params.stackId)
-
-    if (findStack === false) {
-        res.status(400)
-    } else {
-        res.status(204)
-    }
+    const findStack = getClinic().removeStackFromEnvelope(req.params.stackId)
+    findStack ? res.status(204) : res.status(400)
     res.end()
 })
 
@@ -51,20 +45,8 @@ app.put('/implant/:stackId/:envelopeId', (req, res) => {
 })
 
 app.post('/kill/:envelopeId', (req, res) => {
-    let findEnvelope = false
-    for (let i = 0; i < getClinic().envelopes.length; i++) {
-        if (getClinic().envelopes[i].id === parseInt(req.params.envelopeId)) {
-            getClinic().removeStackFromEnvelope(getClinic().envelopes[i].idStack)
-            getClinic().killEnvelope(req.params.envelopeId)
-            findEnvelope = true
-        }
-    }
-
-    if (findEnvelope === false) {
-        res.status(400)
-    } else {
-        res.status(204)
-    }
+    let findEnvelope = getClinic().killEnvelope(req.params.envelopeId)
+    findEnvelope ? res.status(204) : res.status(400)
     res.end()
 })
 

@@ -22,25 +22,23 @@ describe('Remove action', () => {
     })
 
     it('When we can remove', (done) => {
+        clinicDependency.getClinic().create('M', 'Bob', 75)
+
         clinicDependency.getClinic = jest.fn().mockReturnValue({
             removeStackFromEnvelope: jest.fn(),
-            create: jest.fn()
         })
 
-        const removeStackFromEnvelope = jest.fn().mockReturnValue()
-        const create = jest.fn().mockReturnValue()
+        const removeStackFromEnvelope = jest.fn().mockReturnValue(true)
 
         clinicDependency.getClinic.mockReturnValue({
             removeStackFromEnvelope,
-            create
         })
-        
-        clinicDependency.getClinic().create('M', 'Bob', 75)
-    
+
         request(app)
             .post('/remove/2')
             .expect(204)
             .expect(response => {
+                expect(response.body).toEqual({})
                 expect(removeStackFromEnvelope).toHaveBeenCalledTimes(1)
                 expect(removeStackFromEnvelope).toHaveBeenCalledWith("2")
             })
