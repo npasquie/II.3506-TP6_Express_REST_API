@@ -4,7 +4,14 @@ import app from '../app'
 import * as clinicDependency from '../weiClinic'
 
 describe('Implant action', () => {
-    it('When data is fine', done => {
+    it('When the stack cannot be found', done => {
+        request(app)
+            .put('/implant/1/1')
+            .expect(400)
+            .end(done)
+    })
+
+    it('When data is fine with envelope ID', done => {
         clinicDependency.getClinic().create('M', 'Jack', 25)
         clinicDependency.getClinic().envelopes[0].idStack = null
         clinicDependency.getClinic().stacks[0].idEnvelope = null
@@ -20,8 +27,8 @@ describe('Implant action', () => {
         })
 
         request(app)
-            .get('/implant/1/1')
-            .expect(204)
+            .put('/implant/1/1')
+            .expect(200)
             .expect(response => {
                 expect(response.body).toEqual({})
                 expect(assignStackToEnvelope).toHaveBeenCalledTimes(1)

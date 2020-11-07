@@ -25,10 +25,10 @@ app.post('/remove/:stackId', (req, res) => {
     res.end()
 })
 
-app.put('/implant/:stackId/:envelopeId', (req, res) => {
+app.put('/implant/:stackId/:envelopeId?', (req, res) => {
     const stackId = req.params.stackId
     const envelopeId = req.params.envelopeId
-    let returnStatus = getClinic().assignStackToEnvelope(stackId, envelopeId)
+    const returnStatus = getClinic().assignStackToEnvelope(stackId, envelopeId ? envelopeId : null)
 
     switch (returnStatus) {
         case 0:
@@ -45,20 +45,14 @@ app.put('/implant/:stackId/:envelopeId', (req, res) => {
 })
 
 app.post('/kill/:envelopeId', (req, res) => {
-    let findEnvelope = getClinic().killEnvelope(req.params.envelopeId)
+    const findEnvelope = getClinic().killEnvelope(req.params.envelopeId)
     findEnvelope ? res.status(204) : res.status(400)
     res.end()
 })
 
 app.delete('/truedeath/:stackId', (req, res) => {
-    const stackId = req.params.stackId
-    let done = getClinic().destroyStack(stackId)
-
-    if (done === false) {
-        res.status(400)
-    } else {
-        res.status(204)
-    }
+    const done = getClinic().destroyStack(req.params.stackId)
+    done ? res.status(204) : res.status(400)
     res.end()
 })
 
