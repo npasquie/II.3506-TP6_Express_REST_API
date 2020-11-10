@@ -5,7 +5,7 @@ export const corticalStackSchema = new EntitySchema({
     tableName: 'CorticalStacks',
     name: 'corticalStack',
     target: CorticalStack,
-    colums: {
+    columns: {
         id: {
             primary: true,
             generated: true,
