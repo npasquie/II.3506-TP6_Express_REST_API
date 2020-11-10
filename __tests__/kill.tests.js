@@ -1,7 +1,7 @@
 import request from 'supertest'
-import app from '../app'
+import app from '../src/controller/app'
 
-import * as clinicDependency from '../weiClinic'
+import * as clinicDependency from '../src/weiClinic'
 
 describe('Kill action', () => {
     it('When the envelope cannot be found', (done) => {

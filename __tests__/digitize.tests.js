@@ -1,7 +1,7 @@
 import request from 'supertest'
-import app from '../app'
+import app from '../src/controller/app'
 
-import * as clinicDependency from '../weiClinic'
+import * as clinicDependency from '../src/weiClinic'
 
 const AGE = 47
 const GENDER = 'M'

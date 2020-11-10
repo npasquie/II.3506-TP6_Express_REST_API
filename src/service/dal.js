@@ -1,9 +1,9 @@
 import mysql from 'mysql2/promise'
 import { getMetadataArgsStorage } from 'typeorm'
-import CorticalStack from './corticalStack'
-import { corticalStackSchema } from './corticalStackSchema'
-import Envelope from './envelope'
-import { envelopeSchema } from './envelopeSchema'
+import CorticalStack from '../models/corticalStack'
+import { corticalStackSchema } from '../models/corticalStackSchema'
+import Envelope from '../models/envelope'
+import { envelopeSchema } from '../models/envelopeSchema'
 
 class Dal {
     async connect() {
