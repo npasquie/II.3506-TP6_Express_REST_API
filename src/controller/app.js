@@ -28,7 +28,7 @@ app.post('/remove/:stackId', (req, res) => {
 app.put('/implant/:stackId/:envelopeId?', (req, res) => {
     const stackId = req.params.stackId
     const envelopeId = req.params.envelopeId
-    const returnStatus = getClinic().assignStackToEnvelope(stackId, envelopeId ? envelopeId : null)
+    const returnStatus = getClinic().assignStackToEnvelope(stackId, envelopeId)
 
     switch (returnStatus) {
         case 0:

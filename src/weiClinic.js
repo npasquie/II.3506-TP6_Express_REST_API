@@ -24,78 +24,71 @@ class WeiClinic {
     }
 
     assignStackToEnvelope(idStack, idEnvelope) {
-        let returnStatus = 0
-        for (let i = 0; i < this.stacks.length; i++) {
-            let stack = this.stacks[i]
-            if (stack.id === idStack) {
-                if (idEnvelope === null) {
-                    for (let j = 0; j < this.envelopes.length; i++) {
-                        let envelope = this.envelopes[i]
-                        if (envelope.idStack === null) {
-                            idEnvelope = envelope.id
-                        }
-                    }
-                    returnStatus = 1
-                }
-                if (idEnvelope !== null) {
-                    for (let j = 0; j < this.envelopes.length; j++) {
-                        let envelope = this.envelopes[j]
-                        if (envelope.id === idEnvelope) {
-                            stack.idEnvelope = idEnvelope
-                            envelope.idStack = idStack
-                            returnStatus = 2
-                        }
-                    }
-                }
-            }
+        const stackId = parseInt(idStack)
+        const stackFound = this.stacks.find((stack) => {
+            return stack.id === stackId
+        })
+        if (stackFound === undefined) return 0
+        if (idEnvelope !== undefined) {
+            let envelopeId = parseInt(idEnvelope)
+            const envelopeFound = this.envelopes.find((envelope) => {
+                return envelope.id === envelopeId
+            })
+            if (envelopeFound === undefined) return 0
+            stackFound.idEnvelope = envelopeId
+            envelopeFound.idStack = stackId
+        } else {
+            const backupEnvelope = this.envelopes.find((envelope) => {
+                return envelope.id === null
+            })
+            if (backupEnvelope === undefined) return 1
+            backupEnvelope.idStack = stackId
+            stackFound.idEnvelope = backupEnvelope.id
         }
-        return returnStatus
+        return 2
     }
 
     removeStackFromEnvelope(idStack) {
-        let done = false
-        for (let i = 0; i < this.stacks.length; i++) {
-            if (this.stacks[i].id === idStack) {
-                for (let j = 0; j < this.envelopes.length; j++) {
-                    if (this.envelopes[j].id === this.stacks[i].idEnvelope) {
-                        this.stacks[i].idEnvelope = null
-                        this.envelopes[j].idStack = null
-                        done = true
-                    }
-                }
-            }
-        }
-        return done
+        const stackId = parseInt(idStack)
+        const stackFound = this.stacks.find((stack) => {
+            return stack.id === stackId
+        })
+        if (stackFound === undefined) return false
+        const envelopeId = stackFound.idEnvelope
+        const envelopeFound = this.envelopes.find((envelope) => {
+            return envelope.id === envelopeId
+        })
+        if (envelopeFound === undefined) return false
+
+        stackFound.idEnvelope = null
+        envelopeFound.idStack = null
+        return true
     }
 
     killEnvelope(idEnvelope) {
-        let done = false
-        for (let i = 0; i < this.envelopes.length; i++) {
-            let envelope = this.envelopes[i]
-            if (envelope === idEnvelope) {
-                if (envelope.idStack !== null) {
-                    this.removeStackFromEnvelope(envelope.idStack)
-                }
-                this.envelopes.splice(i, 1)
-                done = true
-            }
-        }
-        return done
+        const envelopeId = parseInt(idEnvelope)
+        const envelopeFound = this.envelopes.find((envelope) => {
+            return envelope.id === envelopeId
+        })
+        if (envelopeFound === undefined) return false
+        if (envelopeFound.idStack !== null) this.removeStackFromEnvelope(envelopeFound.idStack)
+        this.envelopes.filter((envelope) => {
+            return envelope.id !== envelopeFound.id
+        })
+        return true
     }
 
     destroyStack(idStack) {
-        let done = false;
-        for (let i = 0; i < this.stacks.length; i++) {
-            let stack = this.stacks[i]
-            if (stack.id === idStack) {
-                if (stack.idEnvelope !== null) {
-                    this.killEnvelope(stack.idEnvelope)
-                }
-                this.stacks.splice(i, 1)
-                done = true
-            }
-        }
-        return done
+        const stackId = parseInt(idStack)
+        const stackFound = this.stacks.find((stack) => {
+            return stack.id === stackId
+        })
+        if (stackFound === undefined) return false
+        if (stackFound.idEnvelope !== null) this.killEnvelope(stackFound.idEnvelope)
+        this.stacks.filter(stack => {
+            return stack.id !== stackFound.id
+        })
+        return true
     }
 }
 
