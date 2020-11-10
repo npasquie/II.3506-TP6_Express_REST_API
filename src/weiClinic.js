@@ -4,8 +4,9 @@ import Envelope from './models/envelope'
 
 class WeiClinic {
     constructor() {
-        this.envelopes = []
-        this.stacks = []
+        this.dal = new Dal()
+        this.envelopes = this.dal.getEnvelopes()
+        this.stacks = this.dal.getCorticalStacks()
     }
 
     create(realGender, name, age) {
