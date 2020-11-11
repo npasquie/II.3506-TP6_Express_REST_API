@@ -41,7 +41,6 @@ class Dal {
 
         try {
             const corticalStacksRepository = connection.getRepository(CorticalStack)
-
             return await corticalStacksRepository.find()
         } catch(err) {
             console.error(err.message)
@@ -82,7 +81,6 @@ class Dal {
             connection.close()
         }
     }
-
 }
 
 export default Dal

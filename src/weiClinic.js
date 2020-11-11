@@ -34,20 +34,20 @@ class WeiClinic {
 
     assignStackToEnvelope(idStack, idEnvelope) {
         const stackId = parseInt(idStack)
-        const stackFound = this.stacks.find((stack) => {
+        const stackFound = this.stacks.find(stack => {
             return stack.id === stackId
         })
         if (stackFound === undefined) return 0
         if (idEnvelope !== undefined) {
             let envelopeId = parseInt(idEnvelope)
-            const envelopeFound = this.envelopes.find((envelope) => {
+            const envelopeFound = this.envelopes.find(envelope => {
                 return envelope.id === envelopeId
             })
             if (envelopeFound === undefined) return 0
             stackFound.idEnvelope = envelopeId
             envelopeFound.idStack = stackId
         } else {
-            const backupEnvelope = this.envelopes.find((envelope) => {
+            const backupEnvelope = this.envelopes.find(envelope => {
                 return envelope.id === null
             })
             if (backupEnvelope === undefined) return 1
@@ -59,12 +59,12 @@ class WeiClinic {
 
     removeStackFromEnvelope(idStack) {
         const stackId = parseInt(idStack)
-        const stackFound = this.stacks.find((stack) => {
+        const stackFound = this.stacks.find(stack => {
             return stack.id === stackId
         })
         if (stackFound === undefined) return false
         const envelopeId = stackFound.idEnvelope
-        const envelopeFound = this.envelopes.find((envelope) => {
+        const envelopeFound = this.envelopes.find(envelope => {
             return envelope.id === envelopeId
         })
         if (envelopeFound === undefined) return false
@@ -76,12 +76,12 @@ class WeiClinic {
 
     killEnvelope(idEnvelope) {
         const envelopeId = parseInt(idEnvelope)
-        const envelopeFound = this.envelopes.find((envelope) => {
+        const envelopeFound = this.envelopes.find(envelope => {
             return envelope.id === envelopeId
         })
         if (envelopeFound === undefined) return false
         if (envelopeFound.idStack !== null) this.removeStackFromEnvelope(envelopeFound.idStack)
-        this.envelopes.filter((envelope) => {
+        this.envelopes.filter(envelope => {
             return envelope.id !== envelopeFound.id
         })
         return true
@@ -89,7 +89,7 @@ class WeiClinic {
 
     destroyStack(idStack) {
         const stackId = parseInt(idStack)
-        const stackFound = this.stacks.find((stack) => {
+        const stackFound = this.stacks.find(stack => {
             return stack.id === stackId
         })
         if (stackFound === undefined) return false
