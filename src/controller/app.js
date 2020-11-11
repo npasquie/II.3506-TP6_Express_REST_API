@@ -30,39 +30,28 @@ app.get('/digitize', (req, res) => {
 })
 
 app.post('/remove/:stackId', (req, res) => {
-    const findStack = getClinic().removeStackFromEnvelope(req.params.stackId)
-    findStack ? res.status(204) : res.status(400)
+    const result = getClinic().removeStackFromEnvelope(req.params.stackId)
+    res.status(result.status).set(result.message)
     res.end()
 })
 
 app.put('/implant/:stackId/:envelopeId?', (req, res) => {
     const stackId = req.params.stackId
     const envelopeId = req.params.envelopeId
-    const returnStatus = getClinic().assignStackToEnvelope(stackId, envelopeId)
-
-    switch (returnStatus) {
-        case 0:
-            res.status(400)
-            break
-        case 1:
-            res.status(404)
-            break
-        case 2:
-            res.status(204)
-            break
-    }
+    const result = getClinic().assignStackToEnvelope(stackId, envelopeId)
+    res.status(result.status).set(result.message)
     res.end()
 })
 
 app.post('/kill/:envelopeId', (req, res) => {
-    const findEnvelope = getClinic().killEnvelope(req.params.envelopeId)
-    findEnvelope ? res.status(204) : res.status(400)
+    const result = getClinic().killEnvelope(req.params.envelopeId)
+    res.status(result.status).set(result.message)
     res.end()
 })
 
 app.delete('/truedeath/:stackId', (req, res) => {
-    const done = getClinic().destroyStack(req.params.stackId)
-    done ? res.status(204) : res.status(400)
+    const result = getClinic().destroyStack(req.params.stackId)
+    res.status(result.status).set(result.message)
     res.end()
 })
 

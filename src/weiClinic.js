@@ -33,71 +33,84 @@ class WeiClinic {
     }
 
     assignStackToEnvelope(idStack, idEnvelope) {
+        const error400 = {status: 400, message: `Stack ${idStack} or envelope ${idEnvelope} not found`}
+        const error404 = {status: 404, message: "No backup envelopes available"}
+        const status204 = {status: 204, message: `Stack ${idStack} assigned to envelope ${idEnvelope}`}
         const stackId = parseInt(idStack)
         const stackFound = this.stacks.find(stack => {
             return stack.id === stackId
         })
-        if (stackFound === undefined) return 0
+        if (stackFound === undefined) return error400
         if (idEnvelope !== undefined) {
             let envelopeId = parseInt(idEnvelope)
             const envelopeFound = this.envelopes.find(envelope => {
                 return envelope.id === envelopeId
             })
-            if (envelopeFound === undefined) return 0
+            if (envelopeFound === undefined) return error400
             stackFound.idEnvelope = envelopeId
             envelopeFound.idStack = stackId
         } else {
             const backupEnvelope = this.envelopes.find(envelope => {
                 return envelope.id === null
             })
-            if (backupEnvelope === undefined) return 1
+            if (backupEnvelope === undefined) return error404
             backupEnvelope.idStack = stackId
             stackFound.idEnvelope = backupEnvelope.id
         }
-        return 2
+        return status204
     }
 
     removeStackFromEnvelope(idStack) {
+        const error400 = {status: 400, message: `Stack ${idStack} or corresponding envelope not found`}
         const stackId = parseInt(idStack)
         const stackFound = this.stacks.find(stack => {
             return stack.id === stackId
         })
-        if (stackFound === undefined) return false
+        if (stackFound === undefined) return error400
         const envelopeId = stackFound.idEnvelope
+        const status204 = {status: 204, message: `Stack ${idStack} removed from envelope ${envelopeId}`}
         const envelopeFound = this.envelopes.find(envelope => {
             return envelope.id === envelopeId
         })
-        if (envelopeFound === undefined) return false
+        if (envelopeFound === undefined) return error400
 
+        //todo DB update
         stackFound.idEnvelope = null
         envelopeFound.idStack = null
-        return true
+
+        return status204
     }
 
     killEnvelope(idEnvelope) {
+        const error400 = {status: 400, message: `Envelope ${idEnvelope} not found`}
+        const status204 = {status: 204, message: `Envelope ${idEnvelope} killed`}
         const envelopeId = parseInt(idEnvelope)
         const envelopeFound = this.envelopes.find(envelope => {
             return envelope.id === envelopeId
         })
-        if (envelopeFound === undefined) return false
+        if (envelopeFound === undefined) return error400
         if (envelopeFound.idStack !== null) this.removeStackFromEnvelope(envelopeFound.idStack)
+        //todo DB delete
         this.envelopes.filter(envelope => {
             return envelope.id !== envelopeFound.id
         })
-        return true
+        return status204
     }
 
     destroyStack(idStack) {
+        const error400 = {status: 400, message: `Stack ${idStack} not found`}
+        const status204 = {status: 204, message: `Stack ${idStack} destroyed`}
         const stackId = parseInt(idStack)
         const stackFound = this.stacks.find(stack => {
             return stack.id === stackId
         })
-        if (stackFound === undefined) return false
+        if (stackFound === undefined) return error400
         if (stackFound.idEnvelope !== null) this.killEnvelope(stackFound.idEnvelope)
+        //todo DB delete
         this.stacks.filter(stack => {
             return stack.id !== stackFound.id
         })
-        return true
+        return status204
     }
 }
 
