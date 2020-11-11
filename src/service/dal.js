@@ -27,7 +27,6 @@ class Dal {
 
         try {
             const envelopesRepository = connection.getRepository(Envelope)
-
             return await envelopesRepository.find()
         } catch(err) {
             console.error(err.message)

@@ -1,22 +1,30 @@
-import {getNewId} from './idHelper'
 import CorticalStack from './models/corticalStack'
 import Envelope from './models/envelope'
+import Dal from "./service/dal";
 
 class WeiClinic {
     constructor() {
         this.dal = new Dal()
-        this.envelopes = this.dal.getEnvelopes()
-        this.stacks = this.dal.getCorticalStacks()
+        this.dal.getEnvelopes().then(data => {
+            this.envelopes = data
+        }).catch(error => {
+            console.error(error)
+        })
+        this.dal.getCorticalStacks().then(data => {
+            this.stacks = data
+        }).catch(error => {
+            console.error(error)
+        })
     }
 
     create(realGender, name, age) {
-        const stackId = getNewId(this.stacks)
-        const envelopeId = getNewId(this.envelopes)
+        const stackId = this.stacks.length + 1
+        const envelopeId = this.envelopes.length + 1
         const newStack = new CorticalStack(stackId, realGender, name, age, envelopeId)
         const newEnvelope = new Envelope(envelopeId, realGender, age, stackId)
 
-        this.stacks.push(newStack)
-        this.envelopes.push(newEnvelope)
+        this.dal.addCorticalStack(stackId, realGender, name, age, envelopeId)
+        this.dal.addEnvelope(envelopeId, realGender, age, stackId)
 
         return {
             corticalStack: newStack,

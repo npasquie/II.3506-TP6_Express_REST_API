@@ -13,6 +13,16 @@ app.use(function (_req, res, next) {
     next()
 })
 
+app.get('/stacks', (req, res) => {
+    const stacks = getClinic().stacks
+    res.status(200).set({'Content-Type': 'application/json'}).json(stacks)
+})
+
+app.get('/envelopes', (req, res) => {
+    const envelopes = getClinic().envelopes
+    res.status(200).set({'Content-Type': 'application/json'}).json(envelopes)
+})
+
 app.get('/digitize', (req, res) => {
     const {gender, age, name} = req.query
     const createdElements = getClinic().create(gender, name, parseInt(age))
