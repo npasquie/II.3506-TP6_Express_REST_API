@@ -40,18 +40,18 @@ class WeiClinic {
         const stackFound = this.stacks.find(stack => {
             return stack.id === stackId
         })
-        if (stackFound === undefined) return error400
+        if (stackFound === undefined || stackFound.idEnvelope !== null) return error400
         if (idEnvelope !== undefined) {
             let envelopeId = parseInt(idEnvelope)
             const envelopeFound = this.envelopes.find(envelope => {
                 return envelope.id === envelopeId
             })
-            if (envelopeFound === undefined) return error400
+            if (envelopeFound === undefined || envelopeFound.idStack !== null) return error400
             stackFound.idEnvelope = envelopeId
             envelopeFound.idStack = stackId
         } else {
             const backupEnvelope = this.envelopes.find(envelope => {
-                return envelope.id === null
+                return envelope.idStack === null
             })
             if (backupEnvelope === undefined) return error404
             backupEnvelope.idStack = stackId
@@ -68,6 +68,7 @@ class WeiClinic {
         })
         if (stackFound === undefined) return error400
         const envelopeId = stackFound.idEnvelope
+        if (envelopeId === null) return error400
         const status204 = {status: 204, message: `Stack ${idStack} removed from envelope ${envelopeId}`}
         const envelopeFound = this.envelopes.find(envelope => {
             return envelope.id === envelopeId
