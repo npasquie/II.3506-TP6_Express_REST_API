@@ -25,6 +25,7 @@ class WeiClinic {
 
         this.dal.addCorticalStack(stackId, realGender, name, age, envelopeId)
         this.dal.addEnvelope(envelopeId, realGender, age, stackId)
+        this.updateEnvelopesAndStacks()
 
         return {
             corticalStack: newStack,
@@ -49,6 +50,9 @@ class WeiClinic {
             if (envelopeFound === undefined || envelopeFound.idStack !== null) return error400
             stackFound.idEnvelope = envelopeId
             envelopeFound.idStack = stackId
+            this.dal.updateCorticalStack(stackFound)
+            this.dal.updateEnvelope(envelopeFound)
+            this.updateEnvelopesAndStacks()
         } else {
             const backupEnvelope = this.envelopes.find(envelope => {
                 return envelope.idStack === null
@@ -75,9 +79,12 @@ class WeiClinic {
         })
         if (envelopeFound === undefined) return error400
 
-        //todo DB update
         stackFound.idEnvelope = null
         envelopeFound.idStack = null
+
+        this.dal.updateCorticalStack(stackFound)
+        this.dal.updateEnvelope(envelopeFound)
+        this.updateEnvelopesAndStacks()
 
         return status204
     }
@@ -92,6 +99,8 @@ class WeiClinic {
         if (envelopeFound === undefined) return error400
         if (envelopeFound.idStack !== null) this.removeStackFromEnvelope(envelopeFound.idStack)
         //todo DB delete
+        this.dal.deleteEnvelope(envelopeFound)
+        this.updateEnvelopesAndStacks()
         this.envelopes.filter(envelope => {
             return envelope.id !== envelopeFound.id
         })
@@ -108,10 +117,25 @@ class WeiClinic {
         if (stackFound === undefined) return error400
         if (stackFound.idEnvelope !== null) this.killEnvelope(stackFound.idEnvelope)
         //todo DB delete
+        this.dal.deleteCorticalStack(stackFound)
+        this.updateEnvelopesAndStacks()
         this.stacks.filter(stack => {
             return stack.id !== stackFound.id
         })
         return status204
+    }
+
+    updateEnvelopesAndStacks() {
+        this.dal.getEnvelopes().then(data => {
+            this.envelopes = data
+        }).catch(error => {
+            console.error(error)
+        })
+        this.dal.getCorticalStacks().then(data => {
+            this.stacks = data
+        }).catch(error => {
+            console.error(error)
+        })
     }
 }
 
