@@ -74,9 +74,11 @@ class WeiClinic {
         })
         if (envelopeFound === undefined) return error400
 
-        //todo DB update
         stackFound.idEnvelope = null
         envelopeFound.idStack = null
+
+        this.dal.updateCorticalStack(stackFound)
+        this.dal.updateEnvelope(envelopeFound)
 
         return status204
     }

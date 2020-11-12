@@ -81,6 +81,39 @@ class Dal {
             connection.close()
         }
     }
+
+    async updateEnvelope(envelope) {
+        const connection = await this.connect()
+
+        try {
+            const envelopesRepository = connection.getRepository(Envelope)
+            const envelopeUpdated = new Envelope(envelope.id, envelope.gender, envelope.age, envelope.idStack)
+            await envelopesRepository.update(envelopeUpdated)
+            return envelopeUpdated
+        } catch (err) {
+            console.error(err.message)
+            throw err
+        } finally {
+            connection.close()
+        }
+    }
+
+    async updateCorticalStack(stack) {
+        const connection = await this.connect()
+
+        try {
+            const corticalStacksRepository = connection.getRepository(CorticalStack)
+            const corticalStackUpdated = new CorticalStack(stack.id, stack.realGender, stack.name, stack.age, stack.idEnvelope)
+            await corticalStacksRepository.update(corticalStackUpdated)
+            return corticalStackUpdated
+        } catch (err) {
+            console.error(err.message)
+            throw err
+        } finally {
+            connection.close()
+        }
+    }
+    
 }
 
 export default Dal
