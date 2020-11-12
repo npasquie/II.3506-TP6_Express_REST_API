@@ -88,7 +88,7 @@ class Dal {
         try {
             const envelopesRepository = connection.getRepository(Envelope)
             const envelopeUpdated = new Envelope(envelope.id, envelope.gender, envelope.age, envelope.idStack)
-            await envelopesRepository.update(envelopeUpdated)
+            await envelopesRepository.save(envelope)
             return envelopeUpdated
         } catch (err) {
             console.error(err.message)
@@ -103,8 +103,7 @@ class Dal {
 
         try {
             const corticalStacksRepository = connection.getRepository(CorticalStack)
-            const corticalStackUpdated = new CorticalStack(stack.id, stack.realGender, stack.name, stack.age, stack.idEnvelope)
-            await corticalStacksRepository.update(corticalStackUpdated)
+            await corticalStacksRepository.save(stack)
             return corticalStackUpdated
         } catch (err) {
             console.error(err.message)
@@ -113,7 +112,34 @@ class Dal {
             connection.close()
         }
     }
-    
+
+    async deleteEnvelope(envelope) {
+        const connection = await this.connect()
+
+        try {
+            const envelopesRepository = connection.getRepository(Envelope)
+            await envelopesRepository.delete(envelope)
+        } catch (err) {
+            console.error(err.message)
+            throw err
+        } finally {
+            connection.close()
+        }
+    }
+
+    async deleteCorticalStack(stack) {
+        const connection = await this.connect()
+
+        try {
+            const corticalStacksRepository = connection.getRepository(CorticalStack)
+            await corticalStacksRepository.delete(stack)
+        } catch (err) {
+            console.error(err.message)
+            throw err
+        } finally {
+            connection.close()
+        }
+    }
 }
 
 export default Dal
