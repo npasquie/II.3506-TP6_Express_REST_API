@@ -78,6 +78,57 @@ describe('assignStackToEnvelope', () => {
         expect(response).toEqual(error404)
     })
 
+    describe('removeStackFromEnvelope', () => {
+
+        it('can remove the stack', () => {
+            clinicDependency.getClinic().stacks = [{
+                id: 1,
+                realGender: 'M',
+                name: 'Bob',
+                age: 56,
+                idEnvelope: 1
+            }]
+            clinicDependency.getClinic().envelopes = [{
+                id: 1,
+                gender: 'M',
+                age: 26,
+                idStack: 1
+            }]
+            
+            const response = clinicDependency.getClinic().removeStackFromEnvelope(1)
+            const status204 = {status: 204, message: `Stack 1 removed from envelope 1`}
+
+            expect(response).toEqual(status204)
+        })
+
+        it('stack not found', () => {
+            clinicDependency.getClinic().stacks = []
+            clinicDependency.getClinic().envelopes = []
+            
+            const response = clinicDependency.getClinic().removeStackFromEnvelope(1)
+            const error400 = {status: 400, message: `Stack 1 or corresponding envelope not found`}
+
+            expect(response).toEqual(error400)
+        })
+
+        it('stack not in an envelope', () => {
+            clinicDependency.getClinic().stacks = [{
+                id: 1,
+                realGender: 'M',
+                name: 'Bob',
+                age: 56,
+                idEnvelope: null
+            }]
+            clinicDependency.getClinic().envelopes = []
+            
+            const response = clinicDependency.getClinic().removeStackFromEnvelope(1)
+            const error400 = {status: 400, message: `Stack 1 or corresponding envelope not found`}
+
+            expect(response).toEqual(error400)
+        })
+
+    })
+
 
 
 })
