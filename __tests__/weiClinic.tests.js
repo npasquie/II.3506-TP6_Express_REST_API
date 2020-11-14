@@ -1,5 +1,33 @@
 import * as clinicDependency from '../src/weiClinic'
 
+describe('create', () => {
+
+    it('can create', () => {
+        clinicDependency.getClinic().stacks = []
+        clinicDependency.getClinic().envelopes = []
+
+        const responseExpected = {corticalStack: {
+            id: 1,
+            realGender: 'M',
+            name: 'Bob',
+            age: 23,
+            idEnvelope: 1
+        }, 
+        envelope: {
+            id: 1, 
+            gender: 'M',
+            age: 23,
+            idStack: 1
+        }}
+
+        const response = clinicDependency.getClinic().create('M', 'Bob', 23)
+        expect(response).toEqual(responseExpected)
+    })
+
+
+
+
+})
 
 describe('assignStackToEnvelope', () => {
 
@@ -126,11 +154,7 @@ describe('assignStackToEnvelope', () => {
 
             expect(response).toEqual(error400)
         })
-
     })
-
-
-
 })
 
 describe('destroyStack', () => {
