@@ -3,6 +3,7 @@ import * as clinicDependency from '../src/weiClinic'
 describe('Create Action', () => {
 
     it('Can create', () => {
+        jest.useFakeTimers()
         clinicDependency.getClinic().stacks = []
         clinicDependency.getClinic().envelopes = []
 
@@ -11,6 +12,9 @@ describe('Create Action', () => {
     })
 })
 
+beforeEach(() => {
+    jest.useFakeTimers()
+})
 describe('AssignStackToEnvelope Action', () => {
 
     it('Can assign stack to an envelope', () => {
@@ -88,6 +92,9 @@ describe('AssignStackToEnvelope Action', () => {
         expect(response).resolves.toEqual(error404)
     })
 
+    beforeEach(() => {
+        jest.useFakeTimers()
+    })
     describe('RemoveStackFromEnvelope Action', () => {
 
         it('Can remove the stack', () => {
@@ -139,6 +146,9 @@ describe('AssignStackToEnvelope Action', () => {
     })
 })
 
+beforeEach(() => {
+    jest.useFakeTimers()
+})
 describe('DestroyStack Action', () => {
 
     it('Can destroy the stack', () => {
@@ -164,6 +174,9 @@ describe('DestroyStack Action', () => {
     })
 })
 
+beforeEach(() => {
+    jest.useFakeTimers()
+})
 describe('KillEnvelope Action', () => {
 
     it('Can kill the envelope', () => {
