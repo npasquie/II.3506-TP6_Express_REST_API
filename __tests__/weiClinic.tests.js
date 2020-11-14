@@ -1,37 +1,19 @@
 import * as clinicDependency from '../src/weiClinic'
 
-describe('create', () => {
+describe('Create Action', () => {
 
-    it('can create', () => {
+    it('Can create', () => {
         clinicDependency.getClinic().stacks = []
         clinicDependency.getClinic().envelopes = []
 
-        const responseExpected = {corticalStack: {
-            id: 1,
-            realGender: 'M',
-            name: 'Bob',
-            age: 23,
-            idEnvelope: 1
-        }, 
-        envelope: {
-            id: 1, 
-            gender: 'M',
-            age: 23,
-            idStack: 1
-        }}
-
         const response = clinicDependency.getClinic().create('M', 'Bob', 23)
-        expect(response).toEqual(responseExpected)
+        expect(response).resolves.toEqual({status: 200, message: `Stack 1 created with envelope 1`})
     })
-
-
-
-
 })
 
-describe('assignStackToEnvelope', () => {
+describe('AssignStackToEnvelope Action', () => {
 
-    it('can assign stack to an envelope', () => {
+    it('Can assign stack to an envelope', () => {
         clinicDependency.getClinic().stacks = [{
             id: 1,
             realGender: 'M',
@@ -48,10 +30,10 @@ describe('assignStackToEnvelope', () => {
 
         const response = clinicDependency.getClinic().assignStackToEnvelope(1, 1)
         const status204 = {status: 204, message: `Stack 1 assigned to envelope 1`}
-        expect(response).toEqual(status204)
+        expect(response).resolves.toEqual(status204)
     })
 
-    it('the stack is not found', () => {
+    it('Stack is not found', () => {
         clinicDependency.getClinic().stacks = []
         clinicDependency.getClinic().envelopes = [{
             id: 1,
@@ -62,10 +44,10 @@ describe('assignStackToEnvelope', () => {
 
         const response = clinicDependency.getClinic().assignStackToEnvelope(1, 1)
         const error400 = {status: 400, message: `Stack 1 or envelope 1 not found`}
-        expect(response).toEqual(error400)
+        expect(response).resolves.toEqual(error400)
     })
 
-    it('the envelope is not found', () => {
+    it('Envelope is not found', () => {
         clinicDependency.getClinic().stacks = [{
             id: 1,
             realGender: 'M',
@@ -77,17 +59,17 @@ describe('assignStackToEnvelope', () => {
 
         const response = clinicDependency.getClinic().assignStackToEnvelope(1, 1)
         const error400 = {status: 400, message: `Stack 1 or envelope 1 not found`}
-        expect(response).toEqual(error400)
+        expect(response).resolves.toEqual(error400)
     })
 
-    it('there are no backup envelope', () => {
+    it('No backup envelope', () => {
         clinicDependency.getClinic().stacks = [{
             id: 1,
             realGender: 'M',
             name: 'Bob',
             age: 23,
             idEnvelope: null
-        },{
+        }, {
             id: 2,
             realGender: 'F',
             name: "Eve",
@@ -103,12 +85,12 @@ describe('assignStackToEnvelope', () => {
 
         const response = clinicDependency.getClinic().assignStackToEnvelope(1)
         const error404 = {status: 404, message: "No backup envelopes available"}
-        expect(response).toEqual(error404)
+        expect(response).resolves.toEqual(error404)
     })
 
-    describe('removeStackFromEnvelope', () => {
+    describe('RemoveStackFromEnvelope Action', () => {
 
-        it('can remove the stack', () => {
+        it('Can remove the stack', () => {
             clinicDependency.getClinic().stacks = [{
                 id: 1,
                 realGender: 'M',
@@ -122,24 +104,24 @@ describe('assignStackToEnvelope', () => {
                 age: 26,
                 idStack: 1
             }]
-            
+
             const response = clinicDependency.getClinic().removeStackFromEnvelope(1)
             const status204 = {status: 204, message: `Stack 1 removed from envelope 1`}
 
-            expect(response).toEqual(status204)
+            expect(response).resolves.toEqual(status204)
         })
 
-        it('stack not found', () => {
+        it('Stack not found', () => {
             clinicDependency.getClinic().stacks = []
             clinicDependency.getClinic().envelopes = []
-            
+
             const response = clinicDependency.getClinic().removeStackFromEnvelope(1)
             const error400 = {status: 400, message: `Stack 1 or corresponding envelope not found`}
 
-            expect(response).toEqual(error400)
+            expect(response).resolves.toEqual(error400)
         })
 
-        it('stack not in an envelope', () => {
+        it('Stack not in an envelope', () => {
             clinicDependency.getClinic().stacks = [{
                 id: 1,
                 realGender: 'M',
@@ -148,18 +130,18 @@ describe('assignStackToEnvelope', () => {
                 idEnvelope: null
             }]
             clinicDependency.getClinic().envelopes = []
-            
+
             const response = clinicDependency.getClinic().removeStackFromEnvelope(1)
             const error400 = {status: 400, message: `Stack 1 or corresponding envelope not found`}
 
-            expect(response).toEqual(error400)
+            expect(response).resolves.toEqual(error400)
         })
     })
 })
 
-describe('destroyStack', () => {
+describe('DestroyStack Action', () => {
 
-    it('destroy the stack', () => {
+    it('Can destroy the stack', () => {
         clinicDependency.getClinic().stacks = [{
             id: 1,
             realGender: 'M',
@@ -169,20 +151,20 @@ describe('destroyStack', () => {
         }]
         const response = clinicDependency.getClinic().destroyStack(1)
         const status204 = {status: 204, message: `Stack 1 destroyed`}
-        
-        expect(response).toEqual(status204)
+
+        expect(response).resolves.toEqual(status204)
     })
-    it('stack not found', () => {
+    it('Stack not found', () => {
         clinicDependency.getClinic().stacks = []
         const response = clinicDependency.getClinic().destroyStack(1)
         const error400 = {status: 400, message: `Stack 1 not found`}
 
-        expect(response).toEqual(error400)
+        expect(response).resolves.toEqual(error400)
 
     })
 })
 
-describe('killEnvelope', () => {
+describe('KillEnvelope Action', () => {
 
     it('Can kill the envelope', () => {
         clinicDependency.getClinic().envelopes = [{
@@ -195,7 +177,7 @@ describe('killEnvelope', () => {
         const response = clinicDependency.getClinic().killEnvelope(1)
         const status204 = {status: 204, message: `Envelope 1 killed`}
 
-        expect(response).toEqual(status204)
+        expect(response).resolves.toEqual(status204)
     })
 
     it('Envelope not found', () => {
@@ -203,7 +185,7 @@ describe('killEnvelope', () => {
 
         const response = clinicDependency.getClinic().killEnvelope(1)
         const error400 = {status: 400, message: `Envelope 1 not found`}
-        
-        expect(response).toEqual(error400)
+
+        expect(response).resolves.toEqual(error400)
     })
 })

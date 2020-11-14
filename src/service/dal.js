@@ -1,7 +1,7 @@
 import { createConnection } from 'typeorm'
 import CorticalStack from '../models/corticalStack'
-import { corticalStackSchema } from '../models/corticalStackSchema'
 import Envelope from '../models/envelope'
+import { corticalStackSchema } from '../models/corticalStackSchema'
 import { envelopeSchema } from '../models/envelopeSchema'
 
 class Dal {
@@ -50,12 +50,25 @@ class Dal {
         }
     }
 
-    async addEnvelope(id, gender, age, idStack) {
+    async addData(gender, name, age, envelopeId, stackId) {
         const connection = await this.connect()
+        try {
+            const corticalStacksRepository = connection.getRepository(CorticalStack)
+            const newCorticalStack = new CorticalStack(null, gender, name, age, envelopeId)
+            await corticalStacksRepository.save(newCorticalStack)
+            return newCorticalStack
+        } catch (err) {
+            console.error(err.message)
+            throw err
+        } finally {
+            await this.addEnvelope(gender, name, age, stackId, connection)
+        }
+    }
 
+    async addEnvelope(gender, name, age, stackId, connection) {
         try {
             const envelopesRepository = connection.getRepository(Envelope)
-            const newEnvelope = new Envelope(id, gender, age, idStack)
+            const newEnvelope = new Envelope(null, gender, age, stackId)
             await envelopesRepository.save(newEnvelope)
             return newEnvelope
         } catch (err) {
@@ -66,25 +79,22 @@ class Dal {
         }
     }
 
-    async addCorticalStack(id, realGender, name, age, idEnvelope) {
+    async updateData(stack, envelope) {
         const connection = await this.connect()
-
         try {
             const corticalStacksRepository = connection.getRepository(CorticalStack)
-            const newCorticalStack = new CorticalStack(id, realGender, name, age, idEnvelope)
-            await corticalStacksRepository.save(newCorticalStack)
-            return newCorticalStack
+            const corticalStackUpdated = new CorticalStack(stack.id, stack.gender, stack.age, stack.idStack)
+            await corticalStacksRepository.save(stack)
+            return corticalStackUpdated
         } catch (err) {
             console.error(err.message)
-            throw err 
+            throw err
         } finally {
-            connection.close()
+            await this.updateEnvelope(envelope, connection)
         }
     }
 
-    async updateEnvelope(envelope) {
-        const connection = await this.connect()
-
+    async updateEnvelope(envelope, connection) {
         try {
             const envelopesRepository = connection.getRepository(Envelope)
             const envelopeUpdated = new Envelope(envelope.id, envelope.gender, envelope.age, envelope.idStack)
@@ -98,24 +108,8 @@ class Dal {
         }
     }
 
-    async updateCorticalStack(stack) {
-        const connection = await this.connect()
-
-        try {
-            const corticalStacksRepository = connection.getRepository(CorticalStack)
-            await corticalStacksRepository.save(stack)
-            return corticalStackUpdated
-        } catch (err) {
-            console.error(err.message)
-            throw err
-        } finally {
-            connection.close()
-        }
-    }
-
     async deleteEnvelope(envelope) {
         const connection = await this.connect()
-
         try {
             const envelopesRepository = connection.getRepository(Envelope)
             await envelopesRepository.delete(envelope)
@@ -129,7 +123,6 @@ class Dal {
 
     async deleteCorticalStack(stack) {
         const connection = await this.connect()
-
         try {
             const corticalStacksRepository = connection.getRepository(CorticalStack)
             await corticalStacksRepository.delete(stack)

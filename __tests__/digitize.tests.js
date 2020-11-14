@@ -22,18 +22,8 @@ describe('Digitize action', () => {
         }
 
         const expectedResponseBody = {
-            corticalStack: {
-                id: 1,
-                realGender: GENDER,
-                name: NAME,
-                age: AGE,
-                idEnvelope: 1
-            }, envelope: {
-                id: 1,
-                gender: GENDER,
-                age: AGE,
-                idStack: 1
-            }
+            status: 200,
+            message: `Stack 1 created with envelope 1`
         }
 
         const create = jest.fn().mockReturnValue(expectedResponseBody)
@@ -45,10 +35,10 @@ describe('Digitize action', () => {
         request(app)
             .get('/digitize')
             .query(query)
-            .expect(200)
+            .expect(expectedResponseBody.status)
             .expect('Content-Type', /json/)
             .expect(response => {
-                expect(response.body).toEqual(expectedResponseBody)
+                expect(response.body).toEqual(expectedResponseBody.message)
                 expect(create).toHaveBeenCalledTimes(1)
                 expect(create).toHaveBeenCalledWith(GENDER, NAME, AGE)
             })
